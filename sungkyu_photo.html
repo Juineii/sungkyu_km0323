@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>签售CUT · Juineii（xhs/vx同名）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            padding: 1.5rem 1.5rem 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+            flex-wrap: wrap;
+        }
+
+        h1::before {
+            content: "🎟️";
+            font-size: 1.8rem;
+        }
+
+        .info-note {
+            background: #f8fafc;
+            border-left: 4px solid #94a3b8;
+            border-radius: 0.8rem;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.8rem;
+            font-size: 0.85rem;
+            color: #334155;
+            line-height: 1.5;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .info-note p {
+            margin: 0;
+        }
+        .info-note strong {
+            color: #1e4a7a;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.2rem;
+            box-shadow: 0 8px 20px -6px rgba(0, 32, 64, 0.08);
+            transition: all 0.2s ease;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #0f172a;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-value input {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #0f172a;
+            border: none;
+            background: #f1f5f9;
+            padding: 0.2rem 0.8rem;
+            width: 130px;
+            border-radius: 1rem;
+            outline: 2px solid transparent;
+            transition: outline 0.15s, background 0.15s;
+            font-family: inherit;
+        }
+
+        .stat-value input:focus {
+            outline: 2px solid #94a3b8;
+            background: #ffffff;
+        }
+
+        .readonly-value {
+            background: #f1f5f9;
+            padding: 0.2rem 1.2rem;
+            border-radius: 1rem;
+            color: #1e293b;
+            font-size: 1.8rem;
+            min-width: 80px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .cut-value {
+            background: #e6f0ff;
+            color: #1e4a7a;
+            font-weight: 700;
+        }
+
+        .total-value {
+            background: #f0f3f8;
+            color: #0b3b5c;
+            font-weight: 600;
+        }
+
+        .hint {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 0.5rem;
+            border-top: 1px dashed #e2e8f0;
+            padding-top: 0.4rem;
+        }
+
+        .table-section {
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 26px -8px rgba(0, 34, 68, 0.1);
+            border: 1px solid #e9eef3;
+        }
+
+        .table-header {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            margin-bottom: 1.2rem;
+            gap: 0.8rem;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .table-header h2 {
+            font-size: 1.3rem;
+            font-weight: 550;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .table-header h2 span {
+            background: #e9eef3;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .update-badge {
+            background: #dbeafe;
+            color: #1e4b8b;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 2px 6px rgba(0,69,145,0.06);
+            white-space: nowrap;
+        }
+
+        .sort-radio-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            background: #f0f5fa;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            border: 1px solid #dde3ea;
+            width: fit-content;
+        }
+
+        .sort-radio-container label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .sort-radio-container input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #94a3b8;
+            border-radius: 50%;
+            margin: 0;
+            background: white;
+            transition: 0.1s;
+            cursor: pointer;
+        }
+        .sort-radio-container input[type="radio"]:checked {
+            border: 5px solid #1e4a7a;
+            background: white;
+        }
+        .sort-radio-container input[type="radio"]:focus-visible {
+            outline: 2px solid #1e4a7a;
+            outline-offset: 2px;
+        }
+
+        .table-wrapper {
+            border-radius: 1.2rem;
+            border: 1px solid #ecf1f7;
+            background: #fafdff;
+            max-height: 400px;
+            overflow-y: auto;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 600px;  /* 大屏下保持列宽 */
+        }
+
+        th {
+            text-align: left;
+            padding: 0.9rem 1rem;
+            background: #f8fafd;
+            color: #334155;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+            border-bottom: 1px solid #dde3ea;
+            position: sticky;
+            top: 0;
+            background-color: #f8fafd;
+            z-index: 10;
+        }
+
+        td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #eef2f6;
+            color: #1f2a41;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover td {
+            background-color: #f0f7ff;
+            transition: background 0.15s;
+        }
+
+        .sales-positive {
+            color: #2b6e4f;
+            font-weight: 550;
+            background: #e3f2ed;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        .sales-negative {
+            color: #b13e4b;
+            font-weight: 550;
+            background: #ffe9eb;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        .stock-change {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            background: #f0f3f8;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+
+        .empty-row td {
+            padding: 2rem;
+            text-align: center;
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .footer-note {
+            margin-top: 0.8rem;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #86b9eb;
+            border-radius: 10px;
+            display: inline-block;
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        /* ========= 移动端紧凑适配 + 板块并列 + 虚线框 ========= */
+        @media screen and (max-width: 640px) {
+            .dashboard {
+                padding: 1rem;
+                border-radius: 1.5rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+            .info-note {
+                padding: 0.6rem 1rem;
+                margin-bottom: 1.2rem;
+                font-size: 0.78rem;
+                border: 2px dashed #b0c4de;  /* 更淡的虚线 */
+}
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;    /* 两列布局 */
+                gap: 0.8rem;
+                margin-bottom: 1.2rem;
+            }
+            /* 重新排序卡片：总销量(4)与名额人数(2)并列第一行，注水阈值(1)与推荐cut(3)并列第二行 */
+            .stat-card:nth-child(1) {  /* 注水阈值 */
+                order: 2;
+            }
+            .stat-card:nth-child(2) {  /* 名额人数 */
+                order: 1;
+            }
+            .stat-card:nth-child(3) {  /* 推荐cut */
+                order: 3;
+            }
+            .stat-card:nth-child(4) {  /* 总销量 */
+                order: 0;
+            }
+            .stat-card {
+                padding: 0.9rem 1rem;
+                /* 确保 order 在 grid 中生效 */
+            }
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            .stat-value input {
+                font-size: 1.4rem;
+                width: 90px;
+                padding: 0.2rem 0.6rem;
+            }
+            .readonly-value {
+                font-size: 1.4rem;
+                padding: 0.2rem 0.8rem;
+                min-width: 70px;
+            }
+            .hint {
+                font-size: 0.65rem;
+                margin-top: 0.3rem;
+                padding-top: 0.2rem;
+            }
+
+            .table-section {
+                padding: 0.8rem;
+            }
+            .table-header {
+                gap: 0.5rem;
+                margin-bottom: 0.8rem;
+            }
+            .header-row h2 {
+                font-size: 1rem;
+            }
+            .header-row h2 span {
+                font-size: 0.7rem;
+                padding: 0.1rem 0.5rem;
+            }
+            .update-badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.6rem;
+                gap: 0.2rem;
+            }
+            .sort-radio-container {
+                width: 100%;
+                justify-content: space-between;
+                padding: 0.4rem 0.8rem;
+                gap: 0.5rem;
+            }
+            .sort-radio-container label {
+                font-size: 0.75rem;
+                gap: 4px;
+            }
+            .sort-radio-container input[type="radio"] {
+                width: 14px;
+                height: 14px;
+            }
+
+            /* 表格区域：保持原样 */
+            .table-wrapper {
+                max-height: 350px;
+                overflow-x: hidden;
+                border-radius: 1rem;
+            }
+            table {
+                min-width: 100%;
+                width: 100%;
+                table-layout: fixed;
+                font-size: 0.65rem;
+            }
+
+            /* 列宽分配 (与原移动端一致) */
+            th:nth-child(1), td:nth-child(1) { width: 37%; }
+            th:nth-child(2), td:nth-child(2) { width: 17%; }
+            th:nth-child(3), td:nth-child(3) { width: 34%; }
+            th:nth-child(4), td:nth-child(4) { width: 12%; }
+
+            td {
+                white-space: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+                padding: 0.5rem 0.2rem;
+            }
+
+            td::-webkit-scrollbar {
+                height: 3px;
+            }
+            td::-webkit-scrollbar-thumb {
+                background: #b0c4de;
+                border-radius: 4px;
+            }
+
+            th {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 0.5rem 0.2rem;
+                font-size: 0.65rem;
+            }
+
+            .sales-positive, .sales-negative {
+                padding: 0.1rem 0.3rem;
+                font-size: 0.6rem;
+                border-radius: 20px;
+            }
+            .stock-change {
+                padding: 0.1rem 0.25rem;
+                font-size: 0.6rem;
+                border-radius: 8px;
+            }
+
+            .footer-note {
+                font-size: 0.6rem;
+                margin-top: 0.5rem;
+                justify-content: space-between;
+            }
+        }
+
+        /* 超小设备微调 (保持比例) */
+        @media screen and (max-width: 400px) {
+            .stat-value input {
+                width: 80px;
+            }
+            table {
+                font-size: 0.6rem;
+            }
+            th {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1 id="pageTitle">lngshot线上团签</h1>
+
+        <div class="info-note">
+            <p>最后5-10分钟请监控销量变化补单，推荐本数根据数据来源内的所有数据计算，为中签中位数本数，仅作参考，不提供擦线本数；若名额人数有问题、数据长时间没更新，请及时联系我们（<strong>vx：nsxnso</strong>）。</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">💧 注水阈值</div>
+                <div class="stat-value">
+                    <input type="number" id="thresholdInput" min="1" value="5" step="1" aria-label="注水阈值，正整数">
+                </div>
+                <div class="hint">输入正整数，高于该值的单笔销量不计入推荐cut计算</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">👥 名额人数</div>
+                <div class="stat-value">
+                    <span class="readonly-value" id="quotaDisplay">15</span>
+                </div>
+                <div class="hint">本场活动名额总人数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">📐 推荐 cut</div>
+                <div class="stat-value">
+                    <span class="readonly-value cut-value" id="cutDisplay">—</span>
+                </div>
+                <div class="hint">推荐数量，仅供参考</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">📊 总销量</div>
+                <div class="stat-value">
+                    <span class="readonly-value total-value" id="totalSalesDisplay">0</span>
+                </div>
+                <div class="hint">本场活动的总销售量</div>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <div class="table-header">
+                <div class="header-row">
+                    <h2>
+                        📋 销量变化实时记录
+                        <span id="rowCountBadge">0 条</span>
+                    </h2>
+                    <div class="update-badge">
+                        <span class="dot"></span>
+                        <span id="lastUpdate">更新于 等待数据…</span>
+                    </div>
+                </div>
+                <div class="sort-radio-container">
+                    <label>
+                        <input type="radio" name="sortOrder" value="default" checked> 时间顺序
+                    </label>
+                    <label>
+                        <input type="radio" name="sortOrder" value="desc"> 销量降序
+                    </label>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>来源</th>
+                            <th>变化</th>
+                            <th>单笔</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr class="empty-row"><td colspan="4">⏳ 加载 CSV 数据中…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="footer-note">
+                <span>数据未更新可刷新网页</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================= 活动配置参数（每次换活动，只改这里） =================
+        const ACTIVITY_CONFIG = {
+            /** 页面大标题 (h1显示) */
+            pageTitle: '金圣圭台北合影 3.23 23:59截止',
+            /** 数据源CSV文件路径 (与HTML同目录) */
+            csvUrl: '金圣圭台北合影.csv',
+            /** 本场活动固定名额人数 (显示在“名额人数”卡片) */
+            fixedQuota: 15,
+            /** 自动刷新间隔(毫秒) 默认5000ms = 5秒 */
+            refreshInterval: 1000,
+            /** 注水阈值输入框的默认初始值 (正整数) */
+            defaultThreshold: 0
+        };
+        // =========================================================================
+
+        (function() {
+            // 使用全局配置 ACTIVITY_CONFIG
+            const thresholdInput = document.getElementById('thresholdInput');
+            const quotaDisplay = document.getElementById('quotaDisplay');
+            const cutDisplay = document.getElementById('cutDisplay');
+            const totalSalesDisplay = document.getElementById('totalSalesDisplay');
+            const tableBody = document.getElementById('tableBody');
+            const lastUpdateSpan = document.getElementById('lastUpdate');
+            const rowCountBadge = document.getElementById('rowCountBadge');
+            const pageTitleEl = document.getElementById('pageTitle');
+
+            const radioDefault = document.querySelector('input[name="sortOrder"][value="default"]');
+            const radioDesc = document.querySelector('input[name="sortOrder"][value="desc"]');
+
+            let currentThreshold = ACTIVITY_CONFIG.defaultThreshold;
+            let originalData = [];
+            let sortDescending = false;
+
+            // 应用固定配置到界面
+            quotaDisplay.textContent = ACTIVITY_CONFIG.fixedQuota;
+            pageTitleEl.innerText = ACTIVITY_CONFIG.pageTitle;
+            thresholdInput.value = ACTIVITY_CONFIG.defaultThreshold;
+
+            function parseCSV(text) {
+                let cleaned = text.replace(/^\uFEFF/, '');
+                const lines = cleaned.split(/\r?\n/).filter(line => line.trim() !== '');
+                if (lines.length === 0) return [];
+
+                const dataRows = lines.slice(1);
+                const result = [];
+
+                for (const row of dataRows) {
+                    const cols = row.split(',');
+                    if (cols.length < 4) continue;
+
+                    const time = cols[0].trim();
+                    const product = cols[1].trim();
+                    const change = cols[2].trim();
+                    const saleRaw = cols[3].trim();
+
+                    const saleValue = parseInt(saleRaw, 10);
+                    if (isNaN(saleValue)) continue;
+
+                    result.push({ time, product, change, saleValue });
+                }
+                return result;
+            }
+
+            function renderTable(data) {
+                if (!data || data.length === 0) {
+                    tableBody.innerHTML = `<tr class="empty-row"><td colspan="4">📭 暂无销量记录，请确认CSV文件存在且非空</td></tr>`;
+                    rowCountBadge.textContent = '0 条';
+                    return;
+                }
+
+                let html = '';
+                data.forEach(row => {
+                    const saleClass = row.saleValue >= 0 ? 'sales-positive' : 'sales-negative';
+                    const sign = row.saleValue > 0 ? '+' : '';
+                    html += `<tr>
+                        <td>${row.time}</td>
+                        <td>${row.product}</td>
+                        <td><span class="stock-change">${row.change}</span></td>
+                        <td><span class="${saleClass}">${sign}${row.saleValue}</span></td>
+                    </tr>`;
+                });
+                tableBody.innerHTML = html;
+                rowCountBadge.textContent = `${data.length} 条`;
+            }
+
+            function updateDisplay() {
+                let displayData = originalData;
+                if (sortDescending) {
+                    displayData = [...originalData].sort((a, b) => b.saleValue - a.saleValue);
+                }
+                renderTable(displayData);
+            }
+
+            function computeRecommendedCut(data, threshold, quota) {
+                if (!data || data.length === 0 || quota === 0) return '—';
+                const filtered = data.filter(item => Math.abs(item.saleValue) <= threshold);
+                if (filtered.length === 0) return '0.00';
+                const sum = filtered.reduce((acc, cur) => acc + cur.saleValue, 0);
+                return (sum / quota).toFixed(2);
+            }
+
+            function computeTotalSales(data) {
+                if (!data || data.length === 0) return 0;
+                return data.reduce((acc, cur) => acc + cur.saleValue, 0);
+            }
+
+            async function fetchAndUpdate() {
+                try {
+                    const urlWithCache = `${ACTIVITY_CONFIG.csvUrl}?t=${Date.now()}`;
+                    const response = await fetch(urlWithCache);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    const csvText = await response.text();
+
+                    const newData = parseCSV(csvText);
+                    originalData = newData;
+
+                    updateDisplay();
+
+                    const now = new Date();
+                    lastUpdateSpan.textContent = `更新于 ${now.toLocaleTimeString()}`;
+
+                    const cutValue = computeRecommendedCut(originalData, currentThreshold, ACTIVITY_CONFIG.fixedQuota);
+                    cutDisplay.textContent = cutValue;
+
+                    const total = computeTotalSales(originalData);
+                    totalSalesDisplay.textContent = total;
+
+                } catch (error) {
+                    console.warn('CSV获取失败:', error);
+                    tableBody.innerHTML = `<tr class="empty-row"><td colspan="4">❌ 读取CSV失败: ${error.message}，请确认文件存在且可访问</td></tr>`;
+                    rowCountBadge.textContent = 'error';
+                    lastUpdateSpan.textContent = '更新失败';
+                    originalData = [];
+                    cutDisplay.textContent = '—';
+                    totalSalesDisplay.textContent = '0';
+                    updateDisplay();
+                }
+            }
+
+            thresholdInput.addEventListener('input', function(e) {
+                let val = parseInt(e.target.value, 10);
+                if (isNaN(val) || val < 1) {
+                    val = 1;
+                    thresholdInput.value = 1;
+                }
+                currentThreshold = val;
+
+                if (originalData.length > 0) {
+                    cutDisplay.textContent = computeRecommendedCut(originalData, currentThreshold, ACTIVITY_CONFIG.fixedQuota);
+                } else {
+                    cutDisplay.textContent = '—';
+                }
+            });
+
+            thresholdInput.addEventListener('blur', function() {
+                let val = parseInt(this.value, 10);
+                if (isNaN(val) || val < 1) {
+                    this.value = 1;
+                    currentThreshold = 1;
+                } else {
+                    currentThreshold = val;
+                }
+                if (originalData.length > 0) {
+                    cutDisplay.textContent = computeRecommendedCut(originalData, currentThreshold, ACTIVITY_CONFIG.fixedQuota);
+                }
+            });
+
+            function handleSortChange() {
+                sortDescending = radioDesc.checked;
+                updateDisplay();
+            }
+
+            radioDefault.addEventListener('change', handleSortChange);
+            radioDesc.addEventListener('change', handleSortChange);
+
+            sortDescending = false;
+            radioDefault.checked = true;
+
+            fetchAndUpdate();
+            setInterval(fetchAndUpdate, ACTIVITY_CONFIG.refreshInterval);
+        })();
+    </script>
+</body>
+</html>
